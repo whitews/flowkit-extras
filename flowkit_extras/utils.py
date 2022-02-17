@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 import flowkit as fk
 
@@ -6,7 +7,7 @@ import flowkit as fk
 def extract_gated_data(
         output_dir,
         wsp_file,
-        fcs_files,
+        fcs_dir,
         sample_group,
         event_columns=None,
         exclude_samples=None,
@@ -14,6 +15,9 @@ def extract_gated_data(
 ):
     fs = fk.Session()
     fs.import_flowjo_workspace(wsp_file, ignore_missing_files=True)
+
+    # find FCS files in given fcs_dir
+    fcs_files = [f for f in os.listdir(fcs_dir) if re.search(r'.*\.fcs$', f)]
 
     sample_ids = fs.get_group_sample_ids(
         sample_group,
@@ -57,22 +61,19 @@ def extract_gated_data(
             except KeyError:
                 print(f'Sample to exclude: {sample_id}')
                 continue
-        else:
-            # TODO: test if this ever gets hit to figure out why it is here
-            events_df.dropna(how='any', axis=1, inplace=True)
 
         # now get gate membership for all gates & all events
         gates_df = pd.DataFrame()
         gate_ids = fs.get_gate_ids(sample_group)
         for gate_name, gate_path in gate_ids:
             try:
-                s_gate_memb = fs.get_gate_membership(
+                s_gate_membership = fs.get_gate_membership(
                     sample_group,
                     sample_id,
                     gate_name=gate_name,
                     gate_path=gate_path
                 )
-                gates_df['/'.join([*gate_path, gate_name])] = s_gate_memb
+                gates_df['/'.join([*gate_path, gate_name])] = s_gate_membership
             except KeyError:
                 if verbose:
                     print("Gate %s (%s) not found in sample group" % (gate_name, gate_path))
