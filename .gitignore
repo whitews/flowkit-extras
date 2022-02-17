@@ -1,0 +1,17 @@
+# Dev environment
+.idea
+scratch
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+wheels/
+.eggs/
+*.egg-info/
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
