@@ -1,3 +1,6 @@
+"""
+Utility functions
+"""
 import os
 import re
 import pandas as pd
@@ -13,6 +16,28 @@ def extract_gated_data(
         exclude_samples=None,
         verbose=False
 ):
+    """
+    Extracts pre-processed event data and gate membership for each of the FCS
+    files referenced in given FlowJo10 workspace file (wsp file). Both event
+    and gate membership data are saved as Feather files to the provided output
+    directory. Two subdirectories, 'events' and 'gates', will be created in
+    the output directory where 2 Feather files will be created for each FCS
+    file, one in the 'events' directory (prepended with 'events_') and one in
+    the 'gates' directory (prepended with 'gates_').
+
+    :param output_dir: File path location for output Feather files
+    :param wsp_file: File path of FlowJo 10 workspace (wsp file)
+    :param fcs_dir: Directory path containing FCS files
+    :param sample_group: Sample group label within the WSP file from which
+        gated events and gate membership data will be extracted
+    :param event_columns: List of channels/markers to include in the
+        preprocessed event data. If None, all channels are exported.
+    :param exclude_samples: List of FCS sample IDs to exclude from export
+    :param verbose: If True, prints various issues found when parsing
+        the workspace and FCS files (missing FCS files, missing channel
+        columns, missing gates, and output array shapes)
+    :return: None
+    """
     fs = fk.Session()
     fs.import_flowjo_workspace(wsp_file, ignore_missing_files=True)
 
@@ -83,7 +108,7 @@ def extract_gated_data(
         sample_id_col = gates_df.pop('sample_id')
         gates_df.insert(0, sample_id_col.name, sample_id_col)
 
-        # TODO: save events_df & gates_df to feather here
+        # save events_df & gates_df to feather here
         sample_feather_basename = sample_id.replace('fcs', 'feather')
         events_filename = "events_" + sample_feather_basename
         gates_filename = "gates_" + sample_feather_basename
