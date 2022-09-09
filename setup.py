@@ -11,7 +11,8 @@ reqs = [
     'sklearn',
     'scipy',
     'matplotlib',
-    'seaborn'
+    'seaborn',
+    'statsmodels'
 ]
 
 # on_rtd = os.environ.get('READTHEDOCS') == 'True'
