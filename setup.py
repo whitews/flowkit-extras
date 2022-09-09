@@ -23,7 +23,7 @@ setup(
     name='flowkit_extras',
     version='0.1b',
     packages=find_packages(),
-    description='Extra functions for the Flow Cytometry Toolkit (FlowKit)',
+    description='Extra functions for the FlowKit package',
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Scott White",
@@ -32,9 +32,9 @@ setup(
     ext_modules=[],
     install_requires=reqs,
     classifiers=[
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.6'
+        'Programming Language :: Python :: 3.7'
     ]
 )
